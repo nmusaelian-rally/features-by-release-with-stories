@@ -13,7 +13,6 @@ Ext.define('CustomApp', {
     },
     
     _makeStore: function(){
-         console.log('_makeStore');
          Ext.create('Rally.data.WsapiDataStore', {
             model: 'PortfolioItem/Feature',
             fetch: ['FormattedID','Name'],
@@ -35,15 +34,13 @@ Ext.define('CustomApp', {
                 var features = [];
                 var pendingstories = data.length;
                 if (data.length ===0) {
-                        this._createGrid(features);  //to force refresh on testset grid when there are no testsets in the iteration
+                        this._createGrid(features);  //to force refresh on grid when there are no features in iteration
                 }
                 Ext.Array.each(data, function(feature) {
                             var f  = {
                                 FormattedID: feature.get('FormattedID'),
                                 Name: feature.get('Name'),
-                                Release: (feature.get('Release') && feature.get('Release')._refObjectName) || 'None',
                                 _ref: feature.get("_ref"),
-                                StoryCount: feature.get('UserStories').Count,
                                 UserStories: []
                             };
                             
@@ -51,7 +48,6 @@ Ext.define('CustomApp', {
                            stories.load({
                                 callback: function(records, operation, success){
                                     Ext.Array.each(records, function(story){
-                                        f.DefectCount += story.get('Defects').Count;
                                             f.UserStories.push({
                                             _ref: story.get('_ref'),
                                             FormattedID: story.get('FormattedID'),
@@ -89,12 +85,6 @@ Ext.define('CustomApp', {
                 },
                 {
                     text: 'Name', dataIndex: 'Name'
-                },
-                {
-                    text: 'Story Count', dataIndex: 'StoryCount'
-                },
-                {
-                    text: 'Release', dataIndex: 'Release'
                 },
                 {
                     text: 'User Stories', dataIndex: 'UserStories', 
